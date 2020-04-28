@@ -29,19 +29,27 @@ namespace P4_1
         ClientHandler c;
         ObservableCollection<Player> players = new ObservableCollection<Player>();
 
+        Random rand = new Random((int)DateTime.Now.Ticks);
         public Player player;
+        bool firstRun = false;
 
+        /// <summary>
+        /// Entry point of Client program.
+        /// </summary>
         public MainWindow()
         {
-            player = new Player();
-  
+            InitializeComponent();
+
+
+            
+            player = new Player(rand.Next(0, (int)this.Width),rand.Next(0,(int)this.Height));
+
             c = new ClientHandler("127.0.0.1", 13000, player.Name, PlayersUpdate);
-
-
             comThread = new Thread(_ => ComManager.SendPacket(player, c, ref b_ClientSendMessage));
+            Thread.Sleep(1000);
             comThread.Start();
 
-            InitializeComponent();
+            
 
             ContentPresenterVM contentPresenterVM = new ContentPresenterVM(players);
             contentPresenterVM.AddElement(player);
@@ -49,14 +57,17 @@ namespace P4_1
             this.Display.DataContext = contentPresenterVM;
         }
 
+        /// <summary>
+        /// Update the Player list with information received from other clients.
+        /// </summary>
+        /// <param name="s"></param>
         private void PlayersUpdate(string s)
         {
 
             Player recieved = JsonConvert.DeserializeObject<Player>(s);
 
+
             int index = CheckForExist(recieved);
-
-
             if (index == -1)
             {
                 players.Add(recieved);
@@ -66,8 +77,42 @@ namespace P4_1
                 players.RemoveAt(index);
                 players.Add(recieved);
             }
+
+            // Go through each player and assign one to it if there isn't already one that is "it
+            bool playerIsIt = false;
+            int itIndex = -1;
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (players[i].isIt)
+                {
+                    playerIsIt = true;
+                    itIndex = i;
+                }
+            }
+
+            if (!playerIsIt)
+            {
+                players[0].isIt = true;
+                itIndex = 0;
+            }
+
+            for (int i = 1; i < players.Count; i++)
+            {
+                if (players[i].isIt && Math.Abs(players[i].X - player.X) < 10 && Math.Abs(players[i].Y - player.Y) < 10)
+                {
+                    
+                    this.Close();
+                }
+            }
+
+            
         }
 
+        /// <summary>
+        /// Ensures the player is not already in the list.
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         private int CheckForExist(Player p)
         {
             for(int i = 0; i < players.Count; i++){
@@ -80,6 +125,11 @@ namespace P4_1
             return -1;
         }
 
+        /// <summary>
+        /// Button event callback for the arrow press
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             Window source = sender as Window;
@@ -103,6 +153,11 @@ namespace P4_1
             }
         }
 
+        /// <summary>
+        /// Cleanup method on window close.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             b_ClientSendMessage = false;

@@ -17,15 +17,19 @@ namespace P4_1
         private string name;
         private double x, y;
         private double[] velocity;
+
+        private bool _isIt;
+
         private Guid uid; 
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Player()
+        public Player(int StartY, int StartX)
         {
             name = "Player";
-            x = 0;
-            y = 0;
+            x = StartX;
+            y = StartY;
+            _isIt = false;
             velocity = new double[]{ 10, 10 };
             uid = Guid.NewGuid(); 
         }
@@ -71,6 +75,20 @@ namespace P4_1
             }
         }
 
+
+        public bool isIt
+        {
+            get
+            {
+                return _isIt;
+
+            }
+
+            set
+            {
+                _isIt = value;
+            }
+        }
         public double Y
         {
             get
