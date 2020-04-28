@@ -61,7 +61,7 @@ namespace P4_1
         /// <summary>
         /// Update the Player list with information received from other clients.
         /// </summary>
-        /// <param name="s"></param>
+        /// <param name="s">Serialized json string of Player</param>
         private void PlayersUpdate(string s)
         {
 
@@ -112,8 +112,8 @@ namespace P4_1
         /// <summary>
         /// Ensures the player is not already in the list.
         /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
+        /// <param name="p">Player object</param>
+        /// <returns>Index in player list if the Player is in the list, -1 otherwise.</returns>
         private int CheckForExist(Player p)
         {
             for(int i = 0; i < players.Count; i++){
@@ -129,8 +129,8 @@ namespace P4_1
         /// <summary>
         /// Button event callback for the arrow press
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Send object of the event</param>
+        /// <param name="e">Event argument of the keypress event</param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             Window source = sender as Window;
@@ -170,8 +170,8 @@ namespace P4_1
         /// <summary>
         /// Cleanup method on window close.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Argument of the window closing</param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             b_ClientSendMessage = false;
