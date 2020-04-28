@@ -1,5 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.IO;
+
+using System.Runtime.Serialization;
+
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -14,26 +18,38 @@ namespace P4_1
 {
     public class Player : INotifyPropertyChanged
     {
+        [JsonProperty]
+        private string folderPath;
+        [JsonProperty]
         private string name;
+        [JsonProperty]
         private double x, y;
+        [JsonProperty]
         private double[] velocity;
-
+        [JsonProperty]
         private bool _isIt;
-
+        [JsonProperty]
         private Guid uid; 
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Player(int StartY, int StartX)
         {
+            folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\P4";
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
             name = "Player";
             x = StartX;
             y = StartY;
             _isIt = false;
             velocity = new double[]{ 10, 10 };
-            uid = Guid.NewGuid(); 
+            uid = Guid.NewGuid();
+
+            
         }
 
+        
         public String UID
         {
             get
@@ -45,7 +61,6 @@ namespace P4_1
                 uid = Guid.Parse(value);
             }
         }
-
         public string Name
         {
             get
@@ -57,7 +72,6 @@ namespace P4_1
                 name = value;
             }
         }
-
         public double X
         {
             get
@@ -74,8 +88,6 @@ namespace P4_1
                 OnPropertyChanged("X");
             }
         }
-
-
         public bool isIt
         {
             get
@@ -105,7 +117,6 @@ namespace P4_1
                 OnPropertyChanged("Y");
             }
         }
-
         public double[] Velocity
         {
             get
@@ -117,7 +128,6 @@ namespace P4_1
                 velocity = value;
             }
         }
-
         private void OnPropertyChanged(string s)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(s));
@@ -135,6 +145,11 @@ namespace P4_1
             }
 
             return false;
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            throw new NotImplementedException();
         }
     }
 }

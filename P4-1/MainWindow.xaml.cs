@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -43,7 +44,7 @@ namespace P4_1
 
             
             player = new Player(rand.Next(0, (int)this.Width),rand.Next(0,(int)this.Height));
-
+            SaveToFile(player);
             c = new ClientHandler("127.0.0.1", 13000, player.Name, PlayersUpdate);
             comThread = new Thread(_ => ComManager.SendPacket(player, c, ref b_ClientSendMessage));
             Thread.Sleep(1000);
@@ -151,6 +152,19 @@ namespace P4_1
                         break;
                 }
             }
+        }
+
+        public void SaveToFile(Player player)
+        {
+            string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\P4";
+            string fileName = "\\" + player.UID + ".txt";
+
+            JsonSerializer ser = new JsonSerializer();
+            StreamWriter sw = new StreamWriter(folderPath + fileName);
+            JsonWriter jw = new JsonTextWriter(sw);
+
+            //Run the file saving on a different thread
+            Task.Run(() => ser.Serialize(jw, player));
         }
 
         /// <summary>
