@@ -154,7 +154,7 @@ namespace P4_1
             }
         }
 
-        public void SaveToFile(Player player)
+        public static void SaveToFile(Player player)
         {
             string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\P4";
             string fileName = "\\" + player.UID + ".txt";

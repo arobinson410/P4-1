@@ -79,7 +79,7 @@ namespace P4_Server
                 while (true)
                 {
                     Debug.WriteLine("Creating new Connection...");
-                    ConnectionHandler c = new ConnectionHandler(server.AcceptTcpClient(), "1", ChatEventHandler, 256);
+                    ConnectionHandler c = new ConnectionHandler(server.AcceptTcpClient(), "1", ChatEventHandler, 1024);
                     ClientList.Add(c);
                     Debug.WriteLine("Connection Created.");
                     Thread t = new Thread(() => c.AwaitData());

@@ -39,8 +39,6 @@ namespace P4_1
         private Guid uid; 
 
         private byte[] rgbColor = new byte[3];
-        private bool _isIt;
-        private Guid uid;
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>

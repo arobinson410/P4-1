@@ -13,4 +13,9 @@
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\P4-1\P4-1.csproj" />
+    <ProjectReference Include="..\P4-Server\P4-Server.csproj" />
+  </ItemGroup>
+
 </Project>
